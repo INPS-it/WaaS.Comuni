@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Created with Liquid XML Studio - FREE Community Edition 7.0.2.746 (http://www.liquid-technologies.com)-->
+<xs:schema xmlns="http://inps.it/Casellario" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://inps.it/Casellario" elementFormDefault="qualified">
+	<xs:element name="Flusso" type="FlussoType">
+		<xs:annotation>
+			<xs:documentation>Versione 1.0.0</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="FlussoType">
+		<xs:sequence>
+			<xs:element name="IdentificazioneFlusso" type="IdentificazioneFlussoType"/>
+			<xs:element name="Beneficiario" type="BeneficiarioType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Tramite cooperazione applicativa è consentito l'invio di un solo beneficiario per ogni file XML, nel caso di upload di file XML/CSV da applicazione web si possono inviare più di un beneficiario</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- Sezione Identificazione Flusso -->
+	<xs:complexType name="IdentificazioneFlussoType">
+		<xs:sequence>
+			<xs:element name="Ente" type="EnteType"/>
+		</xs:sequence>
+		<xs:attribute name="Nome" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Sezione Identificazione Beneficiari -->
+	<xs:complexType name="BeneficiarioType">
+		<xs:sequence>
+			<xs:element name="Anagrafica" type="AnagraficaType"/>
+			<xs:element name="Indirizzo" type="IndirizzoType" maxOccurs="5"/>
+			<xs:element name="PrestazioniSociali" type="PrestazioniSocialiType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Tramite cooperazione applicativa è consentito l'invio di una sola prestazione per ogni XML, nel caso di invio tramite upload di file XML/CSV da applicazione web si possono inviare più prestazioni.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="CodiceFiscale" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([A-Za-z]{6}\d{2}[A-Za-z]\d{2}[A-Za-z][A-Za-z0-9]{3}[A-Za-z])|(\d{11} {0,5})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Sezione Identificazione Ente -->
+	<xs:complexType name="EnteType">
+		<xs:attribute name="Codice" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="32"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Denominazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Indirizzo" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:annotation>
+						<xs:documentation>Codice comune sede legale dell'Ente in codifica Ministero Finanze</xs:documentation>
+					</xs:annotation>
+					<xs:minLength value="4"/>
+					<xs:maxLength value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CFOperatore" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([A-Za-z]{6}\d{2}[A-Za-z]\d{2}[A-Za-z][A-Za-z0-9]{3}[A-Za-z])|(\d{11} {0,5})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<!--<xs:attribute name="CodiceComuneEnte" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{6})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>-->
+	</xs:complexType>
+	<!-- Sezione Anagrafica Beneficiario -->
+	<xs:complexType name="AnagraficaType">
+		<xs:attribute name="Cognome" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="36"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Nome" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="36"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="AnnoNascita" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{4})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="LuogoNascita" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:length value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Genere" type="GenereType" use="required"/>
+		<xs:attribute name="CodiceCittadinanza" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{3})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CodiceSecondaCittadinanza" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{3})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="GenereType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Maschio</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Femmina</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Sezione Indirizzo Beneficiario -->
+	<xs:complexType name="IndirizzoType">
+		<xs:attribute name="CodiceRegione" use="optional">
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>Il codice regione è obbligatorio se CodiceNazione è Italia (380) </xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{2})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CodiceComune" use="optional">
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>Il codice comune è obbligatorio se CodiceNazione è Italia (380) </xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{6})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CodiceNazione" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{3})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- Sezione Prestazioni sociali -->
+	<xs:complexType name="PrestazioniSocialiType">
+		<xs:sequence>
+			<xs:element name="SINA" type="SINAType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="TipoOperazione" type="TipoOperazioneType" use="optional"/>
+		<xs:attribute name="PresenzaProvaMezzi" type="PresenzaProvaMezziType" use="required"/>
+		<xs:attribute name="CaratterePrestazione" type="CaratterePrestazioneType" use="optional"/>
+		<xs:attribute name="NumeroProtocolloDSU" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="30"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="AnnoProtocolloDSU" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:pattern value="([0-9]{4})"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DataDSU" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:date"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CodicePrestazione" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="5"/>
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DenominazionePrestazione" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="10"/>
+					<xs:maxLength value="200"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ProtocolloDomanda" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="32"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DataEvento" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:date"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DataInizioPrestazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:date"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DataFinePrestazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:date"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DataErogazionePrestazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:date"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoPrestazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="PeriodoErogazione" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="12"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoMensile" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoQuotaEnte" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoQuotaUtente" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoQuotaSSN" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoQuotaRichiesta" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ImportoSogliaISEE" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="OreServizioMensile" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="PresaCarico" type="PresaCaricoType" use="required"/>
+		<xs:attribute name="AreaUtenza" type="AreaUtenzaType" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="TipoOperazioneType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="I">
+				<xs:annotation>
+					<xs:documentation>Inserimento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="C">
+				<xs:annotation>
+					<xs:documentation>Cancellazione</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PresenzaProvaMezziType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Prestazione soggetta a ISEE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Prestazione soggetta a prova dei mezzi, ma non attraverso ISEE (es. prestaz. inps, agevolaz. tribut.)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Prestazione in generale soggetta a ISEE, ma sottratta alla prova dei mezzi per lo specifico beneficiario in virtu' di altri criteri di bisogno (es. asilo nido per bambino con disabilitÃ  o in famiglie numerose, ecc.)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Prestazione non soggetta a prova dei mezzi (assenza di criteri economici nella disciplina dell'erogazione</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CaratterePrestazioneType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Periodico</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Occasionale (unica soluzione)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PresaCaricoType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>SI</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>NO</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AreaUtenzaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Famiglia e minori</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Disabilità  e Non autosufficienza</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Povertà  ed esclusione sociale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- Sezione SINA -->
+	<xs:complexType name="SINAType">
+		<xs:sequence>
+			<xs:element name="NecessitaInterventiSociali" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="CodicePrestazione" maxOccurs="unbounded">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="5"/>
+									<xs:maxLength value="10"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InvaliditaCivile" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="InvCiv" type="InvCivType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Mobilita" type="MobilitaType" use="required"/>
+		<xs:attribute name="AttivitaVitaQuotidiana" type="AttivitaVitaQuotidianaType" use="required"/>
+		<xs:attribute name="DisturbiAreaCognitiva" type="DisturbiAreaCognitivaType" use="optional"/>
+		<xs:attribute name="DisturbiComportamentali" type="DisturbiComportamentaliType" use="required"/>
+		<xs:attribute name="NecessitaCureSanitarie" type="NecessitaCureSanitarieType" use="optional"/>
+		<xs:attribute name="AreaReddituale" type="AreaRedditualeType" use="required"/>
+		<xs:attribute name="AreaSupporto" type="AreaSupportoType" use="required"/>
+		<xs:attribute name="FonteDerivazioneValutazione" type="FonteDerivazioneValutazioneType" use="required"/>
+		<xs:attribute name="StrumentoValutazione" type="StrumentoValutazioneType" use="required"/>
+		<xs:attribute name="FonteDerivazioneInvalidita" type="FonteDerivazioneInvaliditaType" use="optional"/>
+	</xs:complexType>
+	<xs:simpleType name="MobilitaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Si sposta da solo</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Si Sposta Assistito</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Non Si Sposta</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AttivitaVitaQuotidianaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Autonomo</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Parzialmente dipendente</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Totalmente dipendente</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DisturbiAreaCognitivaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Lievi</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Moderati</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Gravi</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DisturbiComportamentaliType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Assenti</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Presenti</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NecessitaCureSanitarieType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Bassa</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Media</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Alta</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AreaRedditualeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Autonomo e in equilibrio finanziario</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Riceve aiuto da parenti e/o da altre persone</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>In condizione di bisogno economico e senza aiuti da  parenti o altre persone</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AreaSupportoType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Presenza della rete familiare o informale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Presenza parziale e/o temporanea della rete familiare o informale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Assenza della rete familiare o informale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FonteDerivazioneValutazioneType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>UVM</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Cartella sociale</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Altra documentazione</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Raccolta diretta</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StrumentoValutazioneType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>SVAMA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>AGED</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>RUG</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>SOSIA</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>SCHEMA POLARE</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>VALGRAF</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Altro Sistema Di Codifica</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InvCivType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Certificazione Invalidita' Civile parziale non inferiore al 75%</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Certificazione Invalidita' Civile Totale (100%) Con Indennita' di accompagnamento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Certificazione Invalidita' Civile totale (100%) senza indennita' di accompagnamento</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Certificazione Npi</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Certificazione L.104 (art.3, comma 1)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Certificazione L.104 (art.3, comma 3)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Certificazione L.104 (art.12)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>Certificazione L.104 (art.13)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="FonteDerivazioneInvaliditaType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Certificazione invalidita' verificata on line o cartacea</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Dichiarazione della persona</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

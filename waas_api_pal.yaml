@@ -1,0 +1,345 @@
+openapi: 3.0.3
+info:
+  title: Welfare as a Service
+  version: 1.0.0
+  x-summary: API di Interscambio dati Welfare per le PAL
+  termsOfService: "url-terms-of-service"
+  contact:
+    name: Nome Contatto
+    email: info@inps.it
+  x-api-id: waas-pal
+  description: |-
+    # API di Interscambio dati Welfare per le PAL
+
+    Il progetto “Welfare As a Service” ha obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è pertanto una banca dati integrata di tutte le informazioni presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API dio interscambio esposta da tutti i ssoggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
+
+    La API di interscambio è basata su un’interfaccia standard Openapi 3 conforme alle linee guida AGID per l’interoperabilità (MODI).
+
+    Le entry oggetto di scambio sono elementi unitari JSON che includono un ﬂusso codificato in base64, conforme alla specifica del “*DM 206 del 2014*” per il ‘Sistema Informativo delle prestazioni e dei bisogni sociali (SIUSS)'. In accordo a tale specifica sono previste due tipologie di flusso:
+
+    - **PS-PSA-SINA** → oggetto XML codificato in accordo al formato PS\_PSA2016\_SINA.xsd
+
+    - **SINBA** → oggetto XML codificato in accordo al formato SINBA.xsd
+
+    La API sarà erogata da tutti gli enti locali aderenti al progetto e sarà interrogata periodicamente da INPS al ﬁne di acquisire gli aggiornamenti maturati nell’ultimo intervallo di tempo. La richiesta in arrivo da INPS sarà corredata del timestamp relativo all’ultimo ﬂusso acquisito. L’Ente locale deve pertanto utilizzare tale riferimento temporale per individuare gli aggiornamenti da fornire in risposta all’interrogazione ricevuta.
+
+    Per ulteriori dettagli tecnici e per gli schemi sintattici dei flussi da produrre, fare riferimento al seguente indirizzo:
+    - https://www.inps.it/dati-ricerche-e-bilanci/siuss-ex-casellario-dellassistenza/specifiche-tecniche
+
+tags:
+- name: Flussi
+servers:
+- url: https://api.comune.it/waas/v1
+  description: server della generica PAL
+paths:
+  /flussi:
+    get:
+      security:
+        - PDND: []
+      summary: "Restituisce i flussi della PAL ordinati cronologicamente"
+      description: |-
+        Per ogni richiesta ricevuta da INPS, la API dell’Ente locale verifica se sono presenti ﬂussi aggiornati successivamente al timestamp ricevuto nel parametro ‘since’:
+          - se sono presenti aggiornamenti, l’implementazione della API predispone la risposta con un elenco di tali flussi, codificati come elementi JSON, includendo all’interno di ognuno di tali flussi anche l’elemento ‘base64’ contenente il ﬂusso PS-PSA-SINA o SINBA, che riporta le informazioni di dettaglio della specifica posizione da comunicare;
+          - se non sono presenti aggiornamenti, la risposta da restituire ad INPS sarà una risposta vuota; tale risposta indicherà ad INPS di sospendere le interrogazioni all’Ente ﬁno alla prossima scadenza di interrogazione prevista per quell’Ente.
+      operationId: Flussi
+      tags:
+      - Flussi
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          description:  parametro opzionale che speciﬁca il massimo numero di entry che il comune deve restituire con la singola chiamata. Se non speciﬁcato il valore di default è fissato a 10 entry.
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            example: 10
+            minimum: 0
+            maximum: 100
+        - name: since
+          in: query
+          required: true
+          description: >
+            parametro obbligatorio che indica il timestamp, in formato UNIX Timestamp, relativo all’ultima entry acquisita da INPS tramite aggiornamento. Il dato indica al Comune che deve restituire entry a partire dall’istante successivo a quello indicato dal parametro. In caso di prima acquisizione il valore dovrà essere impostato a '-1'.
+          schema:
+            $ref: '#/components/schemas/UnixTimestamp'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entries'
+              examples:
+                RispostaConUnFlusso:
+                  value:
+                    entries:
+                    - codice_ente: H501
+                      denominazione_ente: Comune di Roma
+                      indirizzo_ente: via Parini 51 - Roma
+                      ts: 1600000000
+                      id_operatore: MRORSS80A01H501L
+                      id_beneficiario: MRORSS80A01H501L
+                      id: H501.PS.INPS.20160423.115235
+                      tipo: PS_PSA_SINA
+                      contenuto: >-
+                        PEZsdXNzbyB4bWxucz0iaHR0cDovL2lucHMuaXQvQ2FzZWxsYXJpbyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSI+ICAKICAgICAgICA8SWRlbnRpZmljYXppb25lRmx1c3NvIE5vbWU9Ikg1MDEuUFMuSU5QUy4yMDE2MDQyMy4xMTUyMzUiPiAgCiAgICAgICAgICAgICAgICA8RW50ZSBEZW5vbWluYXppb25lPSJDb211bmUgZGkgUm9tYSIgQ29kaWNlPSJINTAxIiBDRk9wZXJhdG9yZT0iWFhYWFhYODBQMjBCNTAxQiIgSW5kaXJpenpvPSJINTAxIi8+ICAKICAgICAgICA8L0lkZW50aWZpY2F6aW9uZUZsdXNzbz4gIAogICAgICAgIDxCZW5lZmljaWFyaW8gQ29kaWNlRmlzY2FsZT0iUlNTTVJLNjZDMTRINTAxVSI+ICAKICAgICAgICAgICAgICAgIDxBbmFncmFmaWNhIEFubm9OYXNjaXRhPSIxOTY2IiBHZW5lcmU9IjEiIENvZGljZUNpdHRhZGluYW56YT0iMzgwIiBOb21lPSJNSVJLTyIgQ29kaWNlU2Vjb25kYUNpdHRhZGluYW56YT0iMzgwIiBMdW9nb05hc2NpdGE9Ikg1MDEiIENvZ25vbWU9IlJPU1NJIi8+ICAKICAgICAgICAgICAgICAgIDxJbmRpcml6em8gQ29kaWNlQ29tdW5lPSIwNjgwMDEiIENvZGljZU5hemlvbmU9IjM4MCIgQ29kaWNlUmVnaW9uZT0iMDEiLz4gIAogICAgICAgICAgICAgICAgPFByZXN0YXppb25pU29jaWFsaSBDYXJhdHRlcmVQcmVzdGF6aW9uZT0iMSIgQXJlYVV0ZW56YT0iMiIgSW1wb3J0b1F1b3RhVXRlbnRlPSIwLjAiIEltcG9ydG9RdW90YVJpY2hpZXN0YT0iMC4wIiBUaXBvT3BlcmF6aW9uZT0iSSIgRGF0YUluaXppb1ByZXN0YXppb25lPSIyMDE1LTA4LTEzIiBDb2RpY2VQcmVzdGF6aW9uZT0iQTIuMTYiIERlbm9taW5hemlvbmVQcmVzdGF6aW9uZT0iSW50ZXJ2ZW50aSBkaSBzdXBwb3J0byBwZXIgcmVwZXJpbWVudG8gYWxsb2dnaSIgUHJvdG9jb2xsb0RvbWFuZGE9IlByb3RvY29sbG8gZml0dGl6aW8iIERhdGFFdmVudG89IjIwMTYtMTAtMTMiIEltcG9ydG9NZW5zaWxlPSIyMDAuMCIgSW1wb3J0b1F1b3RhU1NOPSIwLjAiIFBlcmlvZG9Fcm9nYXppb25lPSIxIiBJbXBvcnRvU29nbGlhSVNFRT0iMC4wIiBQcmVzYUNhcmljbz0iMSIgRGF0YUZpbmVQcmVzdGF6aW9uZT0iMjAxNi0wOC0xMyIgSW1wb3J0b1F1b3RhRW50ZT0iMC4wIiBQcmVzZW56YVByb3ZhTWV6emk9IjIiIE9yZVNlcnZpemlvTWVuc2lsZT0iMiI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgPFNJTkEgTmVjZXNzaXRhQ3VyZVNhbml0YXJpZT0iMSIgRm9udGVEZXJpdmF6aW9uZUludmFsaWRpdGE9IjEiIEFyZWFSZWRkaXR1YWxlPSIxIiBTdHJ1bWVudG9WYWx1dGF6aW9uZT0iMSIgRm9udGVEZXJpdmF6aW9uZVZhbHV0YXppb25lPSIxIiBBcmVhU3VwcG9ydG89IjEiIE1vYmlsaXRhPSIxIiBEaXN0dXJiaUNvbXBvcnRhbWVudGFsaT0iMSIgQXR0aXZpdGFWaXRhUXVvdGlkaWFuYT0iMSI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8TmVjZXNzaXRhSW50ZXJ2ZW50aVNvY2lhbGk+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMTwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMjwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L05lY2Vzc2l0YUludGVydmVudGlTb2NpYWxpPiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludmFsaWRpdGFDaXZpbGU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnZDaXY+MTwvSW52Q2l2PiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW52Q2l2PjI8L0ludkNpdj4gIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW52YWxpZGl0YUNpdmlsZT4gIAogICAgICAgICAgICAgICAgICAgICAgICA8L1NJTkE+ICAKICAgICAgICAgICAgICAgIDwvUHJlc3RhemlvbmlTb2NpYWxpPiAgCiAgICAgICAgPC9CZW5lZmljaWFyaW8+ICAKPC9GbHVzc28+
+                RispostaVuota:
+                  value:
+                    entries: []
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/default'
+  /status:
+    get:
+      security: [{}]  # NOTA: le chiamate verso /status non richiedono autenticazione in modo da poter essere usate per monitorare lo stato dell'applicazione.
+      summary: "Ritorna lo stato dell'applicazione"
+      operationId: healthCheck
+      tags:
+      - Flussi
+      description: "Ritorna lo stato dell'applicazione in formato problem+json"
+      responses:
+        '200':
+          description: "Il servizio funziona correttamente"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        default:
+          description: "Il server ha riscontrato un problema"
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  securitySchemes:
+    PDND:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |-
+        Access token rilasciato dalla PDND conforme
+        alle indicazioni di sicurezza contenute in [RFC8725](https://tools.ietf.org/html/RFC8725).
+  schemas:
+    UnixTimestamp:
+      description: >-
+        Timestamp relativo alla data di ultima modifica del flusso. Tale dato viene utilizzato per il
+        confronto con il parametro `since` al fine di determinare la successione cronologica degli
+        aggiornamenti.
+      type: integer
+      format: int64
+      example: 1490000000
+      minimum: 0
+      maximum: 1e+20
+      xml:
+        name: UnixTimestamp
+    TaxCode:
+      type: string
+      description: 'Il codice fiscale di una persona fisica'
+      minLength: 16
+      maxLength: 16
+      example: PRTVNI65R70D420E
+    AltCode:
+      type: string
+      description: 'Codice in versione anonimizzata per l''identificazione del beneficiario'
+      minLength: 0
+      maxLength: 20
+    Flusso:
+      type: object
+      additionalProperties: false
+      properties:
+        codice_ente:
+          type: string
+          description:
+            Codice Belfiore, identificativo dell'ente che ha generato il flusso.
+          pattern: '^[A-Z][0-9]{3}$'
+          example: H501
+          maxLength: 4
+          minLength: 4
+        denominazione_ente:
+          type: string
+          description: Denominazione dell'ente che ha generato il flusso.
+          maxLength: 256
+          example: "Comune di Roma"
+        indirizzo_ente:
+          type: string
+          example: via Parini 51 - Roma
+          description: Indirizzo dell'ente.
+          maxLength: 128
+        id_operatore:
+          description: >-
+            Identificativo dell’operatore che ha richiesto la prestazione per conto dell’interessato.
+          anyOf:
+          - $ref: '#/components/schemas/TaxCode'
+        id:
+          description: >-
+            Protocollo di identificazione del flusso. L'identificativo ha la seguente struttura: 'EEEEE.FMT.INPS.AAAAMMGG.NNNNNNN', dove:
+            - EEEEE è il codice dell'ente erogatore
+            - TIPO il formato utilizzato (es. SINBA o PS)
+            - AAAAMMGG è la data di creazione del flusso
+            - NNNNNNN è un progressivo giornaliero
+          type: string
+          example: "H501.PS.INPS.20160423.115235"
+          pattern: '^[A-Z][0-9]{3}\.[A-Z]{2}\.[A-Z]{4}\.[0-9]{8}\.[0-9]{6}$'
+          maxLength: 64
+        tipo:
+          $ref: '#/components/schemas/TipoFlusso'
+        id_beneficiario:
+          description: >-
+            Identificativo dell’interessato e cioè il beneficiario della prestazione.
+            Può trattarsi di un codice fiscale o di un’altra tipologia di identificativo.
+          anyOf:
+          - $ref: '#/components/schemas/TaxCode'
+          - $ref: '#/components/schemas/AltCode'
+        ts:
+          $ref: '#/components/schemas/UnixTimestamp'
+        contenuto:
+          type: string
+          format: byte
+          description: |-
+            Una stringa XML codificata in base64 il cui valore rappresenta l’oggetto XML relativo al flusso. La produzione di tale oggetto XML e la sua acquisizione ed elaborazione resta a carico degli applicativi agli estremi della comunicazione. Gli XSD di riferimento per la creazione di un flusso sono:
+              - [PS_PSA2016_SINA.xsd](https://www.inps.it/docallegatiNP/Mig/Dati_analisi_bilanci/casellario_assistenza/PS_PSA_SINA201812.xsd)
+              - [SINBA.xsd](https://www.inps.it/docallegatiNP/Mig/Dati_analisi_bilanci/casellario_assistenza/SINBA.xsd)
+          maxLength: 10000000  # 10MB
+          example: "PEZsdXNzbyB4bWxucz0iaHR0cDovL2lucHMuaXQvQ2FzZWxsYXJpbyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSI+ICAKICAgICAgICA8SWRlbnRpZmljYXppb25lRmx1c3NvIE5vbWU9Ikg1MDEuUFMuSU5QUy4yMDE2MDQyMy4xMTUyMzUiPiAgCiAgICAgICAgICAgICAgICA8RW50ZSBEZW5vbWluYXppb25lPSJDb211bmUgZGkgUm9tYSIgQ29kaWNlPSJINTAxIiBDRk9wZXJhdG9yZT0iWFhYWFhYODBQMjBCNTAxQiIgSW5kaXJpenpvPSJINTAxIi8+ICAKICAgICAgICA8L0lkZW50aWZpY2F6aW9uZUZsdXNzbz4gIAogICAgICAgIDxCZW5lZmljaWFyaW8gQ29kaWNlRmlzY2FsZT0iUlNTTVJLNjZDMTRINTAxVSI+ICAKICAgICAgICAgICAgICAgIDxBbmFncmFmaWNhIEFubm9OYXNjaXRhPSIxOTY2IiBHZW5lcmU9IjEiIENvZGljZUNpdHRhZGluYW56YT0iMzgwIiBOb21lPSJNSVJLTyIgQ29kaWNlU2Vjb25kYUNpdHRhZGluYW56YT0iMzgwIiBMdW9nb05hc2NpdGE9Ikg1MDEiIENvZ25vbWU9IlJPU1NJIi8+ICAKICAgICAgICAgICAgICAgIDxJbmRpcml6em8gQ29kaWNlQ29tdW5lPSIwNjgwMDEiIENvZGljZU5hemlvbmU9IjM4MCIgQ29kaWNlUmVnaW9uZT0iMDEiLz4gIAogICAgICAgICAgICAgICAgPFByZXN0YXppb25pU29jaWFsaSBDYXJhdHRlcmVQcmVzdGF6aW9uZT0iMSIgQXJlYVV0ZW56YT0iMiIgSW1wb3J0b1F1b3RhVXRlbnRlPSIwLjAiIEltcG9ydG9RdW90YVJpY2hpZXN0YT0iMC4wIiBUaXBvT3BlcmF6aW9uZT0iSSIgRGF0YUluaXppb1ByZXN0YXppb25lPSIyMDE1LTA4LTEzIiBDb2RpY2VQcmVzdGF6aW9uZT0iQTIuMTYiIERlbm9taW5hemlvbmVQcmVzdGF6aW9uZT0iSW50ZXJ2ZW50aSBkaSBzdXBwb3J0byBwZXIgcmVwZXJpbWVudG8gYWxsb2dnaSIgUHJvdG9jb2xsb0RvbWFuZGE9IlByb3RvY29sbG8gZml0dGl6aW8iIERhdGFFdmVudG89IjIwMTYtMTAtMTMiIEltcG9ydG9NZW5zaWxlPSIyMDAuMCIgSW1wb3J0b1F1b3RhU1NOPSIwLjAiIFBlcmlvZG9Fcm9nYXppb25lPSIxIiBJbXBvcnRvU29nbGlhSVNFRT0iMC4wIiBQcmVzYUNhcmljbz0iMSIgRGF0YUZpbmVQcmVzdGF6aW9uZT0iMjAxNi0wOC0xMyIgSW1wb3J0b1F1b3RhRW50ZT0iMC4wIiBQcmVzZW56YVByb3ZhTWV6emk9IjIiIE9yZVNlcnZpemlvTWVuc2lsZT0iMiI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgPFNJTkEgTmVjZXNzaXRhQ3VyZVNhbml0YXJpZT0iMSIgRm9udGVEZXJpdmF6aW9uZUludmFsaWRpdGE9IjEiIEFyZWFSZWRkaXR1YWxlPSIxIiBTdHJ1bWVudG9WYWx1dGF6aW9uZT0iMSIgRm9udGVEZXJpdmF6aW9uZVZhbHV0YXppb25lPSIxIiBBcmVhU3VwcG9ydG89IjEiIE1vYmlsaXRhPSIxIiBEaXN0dXJiaUNvbXBvcnRhbWVudGFsaT0iMSIgQXR0aXZpdGFWaXRhUXVvdGlkaWFuYT0iMSI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8TmVjZXNzaXRhSW50ZXJ2ZW50aVNvY2lhbGk+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMTwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMjwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L05lY2Vzc2l0YUludGVydmVudGlTb2NpYWxpPiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludmFsaWRpdGFDaXZpbGU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnZDaXY+MTwvSW52Q2l2PiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW52Q2l2PjI8L0ludkNpdj4gIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW52YWxpZGl0YUNpdmlsZT4gIAogICAgICAgICAgICAgICAgICAgICAgICA8L1NJTkE+ICAKICAgICAgICAgICAgICAgIDwvUHJlc3RhemlvbmlTb2NpYWxpPiAgCiAgICAgICAgPC9CZW5lZmljaWFyaW8+ICAKPC9GbHVzc28+"
+    Entries:
+      type: object
+      additionalProperties: false
+      properties:
+        entries:
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Flusso'
+    TipoFlusso:
+      type: string
+      description: Tipologia di ﬂusso. I valori ammessi sono “PS\_PSA\_SINA” o “SINBA”.
+      enum: [PS_PSA_SINA, SINBA]
+      example: PS_PSA_SINA
+    Problem:
+      type: "object"
+      additionalProperties: false
+      properties:
+        detail:
+          type: "string"
+          description: "Un testo di descrizione comprensibile del problema occorso"
+          example: "Connection to database timed out"
+          maxLength: 4096
+        instance:
+          type: "string"
+          description: "Collegamento ad una specifica occorrenza dove si è verificato il problema"
+          format: "uri"
+          maxLength: 4096
+        status:
+          maximum: 600
+          exclusiveMaximum: true
+          minimum: 100
+          type: "integer"
+          description: "Codice http restituito"
+          format: "int32"
+          example: 503
+        title:
+          type: "string"
+          description: "Descrizione breve ed esplicativa del problema occorso"
+          maxLength: 4096
+        type:
+          type: "string"
+          description: "URI assoluta per la descrizione del problema occorso"
+          format: "uri"
+          example: "https://tools.ietf.org/html/rfc7231#section-6.6.4"
+          default: "about:blank"
+          maxLength: 4096
+  responses:
+    "400BadRequest":
+      description: "Bad Request"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "401Unauthorized":
+      description: "Non sono state fornite le credenziali necessarie"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "403Forbidden":
+      description: "Autorizzazione non concessa per l'operazione richiesta"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "404NotFound":
+      description: "Not Found"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "409Conflict":
+      description: "Conflict (L'entità che si vuole creare risulta già esistente)"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "429TooManyRequests":
+      description: "Too many requests"
+      headers:
+        Retry-After:
+          $ref: "#/components/headers/Retry-After"
+        X-RateLimit-Limit:
+          $ref: "#/components/headers/X-RateLimit-Limit"
+        X-RateLimit-Remaining:
+          $ref: "#/components/headers/X-RateLimit-Remaining"
+        X-RateLimit-Reset:
+          $ref: "#/components/headers/X-RateLimit-Reset"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    "503ServiceUnavailable":
+      description: "Service Unavailable"
+      headers:
+        Retry-After:
+          $ref: "#/components/headers/Retry-After"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+    default:
+      description: "Unexpected error"
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  headers:
+    Retry-After:
+      description: "Riprovare dopo un attesa minima di tot secondi. Vedi https://tools.ietf.org/html/rfc7231#section-7.1.3"
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+        maximum: 3600
+    X-RateLimit-Limit:
+      description: "Numero massimo di richieste accettate nell'intervallo corrente"
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+        maximum: 100000
+    X-RateLimit-Remaining:
+      description: "Numero di richieste residue nell'intervallo corrente"
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+        maximum: 100000
+    X-RateLimit-Reset:
+      description: "Numero di secondi al completamento dell'intervallo corrente"
+      schema:
+        type: "integer"
+        format: "int32"
+        minimum: 0
+        maximum: 3600
