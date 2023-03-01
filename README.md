@@ -12,4 +12,4 @@ Contiene i file `.xsd` che descrivono i flussi SIUSS e la specifia OpenAPI in fo
 
 I file `.xsd`e `.yaml` sono contenuti tecnici rilasciati con licenza MIT.
 
-Il file `.pdf` di descrizione del progetto è rilasciato con licenza CC-BY 4.0
+Il file `.pdf` di descrizione del progetto Ã¨ rilasciato con licenza CC-BY 4.0
