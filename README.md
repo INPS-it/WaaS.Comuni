@@ -6,7 +6,7 @@ Questo repository contiene le specifiche tecniche per le API di popolamento del 
 
 ### Documentazione Tecnica
 
-Contiene i file `.xsd` che descrivono i flussi SIUSS e la specifia OpenAPI in formato `.yaml` per le API che andranno pubblicate dai Comuni su PDND.
+Contiene i file `.xsd` che descrivono i flussi SIUSS e la specifica OpenAPI in formato `.yaml` per le API che andranno pubblicate dai Comuni su PDND.
 
 ## Licenze
 
