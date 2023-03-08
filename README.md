@@ -10,6 +10,8 @@ Contiene i file `.xsd` che descrivono i flussi SIUSS e la specifia OpenAPI in fo
 
 ## Licenze
 
-I file `.xsd`e `.yaml` sono contenuti tecnici rilasciati con licenza MIT.
+Copyright © 2023 INPS.
 
-Il file `.pdf` di descrizione del progetto è rilasciato con licenza CC-BY 4.0
+I file `.xsd`e `.yaml` sono contenuti tecnici rilasciati con licenza [MIT](https://spdx.org/licenses/MIT.html).
+
+Il file `.pdf` di descrizione del progetto è rilasciato con licenza [CC-BY-4.0](https://spdx.org/licenses/CC-BY-4.0.html)
