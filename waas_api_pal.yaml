@@ -24,7 +24,7 @@ info:
     La API sarà erogata da tutti gli enti locali aderenti al progetto e sarà interrogata periodicamente da INPS al ﬁne di acquisire gli aggiornamenti maturati nell’ultimo intervallo di tempo. La richiesta in arrivo da INPS sarà corredata del timestamp relativo all’ultimo ﬂusso acquisito. L’Ente locale deve pertanto utilizzare tale riferimento temporale per individuare gli aggiornamenti da fornire in risposta all’interrogazione ricevuta.
 
     Per ulteriori dettagli tecnici e per gli schemi sintattici dei flussi da produrre, fare riferimento al seguente indirizzo:
-    - https://www.inps.it/dati-ricerche-e-bilanci/siuss-ex-casellario-dellassistenza/specifiche-tecniche
+    - https://www.inps.it/it/it/dati-e-bilanci/siuss--ex-casellario-dell-assistenza/specifiche-tecniche.html
 
 tags:
 - name: Flussi
