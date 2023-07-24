@@ -1,15 +1,14 @@
 openapi: 3.0.3
 info:
-  title: Welfare as a Service
+  title: Welfare as a Service - API WAAS-SIUSS-Alimentazione
   version: 1.0.0
-  x-summary: API di Interscambio dati Welfare per le PAL
   termsOfService: "url-terms-of-service"
+  x-summary: API di Interscambio dati Welfare per i Welfare Provider
   contact:
-    name: Nome Contatto
-    email: info@inps.it
-  x-api-id: waas-pal
+    email: progettowelfareasaservice@inps.it
+  x-api-id: waas-siuss-alimentazione
   description: |-
-    # API di Interscambio dati Welfare per le PAL
+    # API di Interscambio dati Welfare per i Welfare Provider 
 
     Il progetto “Welfare As a Service” ha obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è pertanto una banca dati integrata di tutte le informazioni presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API dio interscambio esposta da tutti i ssoggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
 
@@ -24,8 +23,7 @@ info:
     La API sarà erogata da tutti gli enti locali aderenti al progetto e sarà interrogata periodicamente da INPS al ﬁne di acquisire gli aggiornamenti maturati nell’ultimo intervallo di tempo. La richiesta in arrivo da INPS sarà corredata del timestamp relativo all’ultimo ﬂusso acquisito. L’Ente locale deve pertanto utilizzare tale riferimento temporale per individuare gli aggiornamenti da fornire in risposta all’interrogazione ricevuta.
 
     Per ulteriori dettagli tecnici e per gli schemi sintattici dei flussi da produrre, fare riferimento al seguente indirizzo:
-    - https://www.inps.it/it/it/dati-e-bilanci/siuss--ex-casellario-dell-assistenza/specifiche-tecniche.html
-
+    - https://www.inps.it/dati-ricerche-e-bilanci/siuss-ex-casellario-dellassistenza/specifiche-tecniche
 tags:
 - name: Flussi
 servers:
@@ -60,7 +58,7 @@ paths:
           in: query
           required: true
           description: >
-            parametro obbligatorio che indica il timestamp, in formato UNIX Timestamp, relativo all’ultima entry acquisita da INPS tramite aggiornamento. Il dato indica al Comune che deve restituire entry a partire dall’istante successivo a quello indicato dal parametro. In caso di prima acquisizione il valore dovrà essere impostato a '-1'.
+            Parametro obbligatorio che indica il timestamp relativo all’ultima entry acquisita da INPS. L’Ente dovrà quindi fornire i flussi con data di aggiornamento immediatamente successiva al valore ricevuto da INPS. In caso di prima acquisizione il valore sarà impostato a '0'.
           schema:
             $ref: '#/components/schemas/UnixTimestamp'
       responses:
@@ -73,20 +71,17 @@ paths:
               examples:
                 RispostaConUnFlusso:
                   value:
-                    entries:
+                    elenco_flussi:
                     - codice_ente: H501
                       denominazione_ente: Comune di Roma
-                      indirizzo_ente: via Parini 51 - Roma
-                      ts: 1600000000
-                      id_operatore: MRORSS80A01H501L
-                      id_beneficiario: MRORSS80A01H501L
-                      id: H501.PS.INPS.20160423.115235
+                      id_flusso: H501.PS.INPS.20160423.115235
+                      ts_flusso: '1970-01-19 13:26:40.000Z'
                       tipo: PS_PSA_SINA
-                      contenuto: >-
-                        PEZsdXNzbyB4bWxucz0iaHR0cDovL2lucHMuaXQvQ2FzZWxsYXJpbyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSI+ICAKICAgICAgICA8SWRlbnRpZmljYXppb25lRmx1c3NvIE5vbWU9Ikg1MDEuUFMuSU5QUy4yMDE2MDQyMy4xMTUyMzUiPiAgCiAgICAgICAgICAgICAgICA8RW50ZSBEZW5vbWluYXppb25lPSJDb211bmUgZGkgUm9tYSIgQ29kaWNlPSJINTAxIiBDRk9wZXJhdG9yZT0iWFhYWFhYODBQMjBCNTAxQiIgSW5kaXJpenpvPSJINTAxIi8+ICAKICAgICAgICA8L0lkZW50aWZpY2F6aW9uZUZsdXNzbz4gIAogICAgICAgIDxCZW5lZmljaWFyaW8gQ29kaWNlRmlzY2FsZT0iUlNTTVJLNjZDMTRINTAxVSI+ICAKICAgICAgICAgICAgICAgIDxBbmFncmFmaWNhIEFubm9OYXNjaXRhPSIxOTY2IiBHZW5lcmU9IjEiIENvZGljZUNpdHRhZGluYW56YT0iMzgwIiBOb21lPSJNSVJLTyIgQ29kaWNlU2Vjb25kYUNpdHRhZGluYW56YT0iMzgwIiBMdW9nb05hc2NpdGE9Ikg1MDEiIENvZ25vbWU9IlJPU1NJIi8+ICAKICAgICAgICAgICAgICAgIDxJbmRpcml6em8gQ29kaWNlQ29tdW5lPSIwNjgwMDEiIENvZGljZU5hemlvbmU9IjM4MCIgQ29kaWNlUmVnaW9uZT0iMDEiLz4gIAogICAgICAgICAgICAgICAgPFByZXN0YXppb25pU29jaWFsaSBDYXJhdHRlcmVQcmVzdGF6aW9uZT0iMSIgQXJlYVV0ZW56YT0iMiIgSW1wb3J0b1F1b3RhVXRlbnRlPSIwLjAiIEltcG9ydG9RdW90YVJpY2hpZXN0YT0iMC4wIiBUaXBvT3BlcmF6aW9uZT0iSSIgRGF0YUluaXppb1ByZXN0YXppb25lPSIyMDE1LTA4LTEzIiBDb2RpY2VQcmVzdGF6aW9uZT0iQTIuMTYiIERlbm9taW5hemlvbmVQcmVzdGF6aW9uZT0iSW50ZXJ2ZW50aSBkaSBzdXBwb3J0byBwZXIgcmVwZXJpbWVudG8gYWxsb2dnaSIgUHJvdG9jb2xsb0RvbWFuZGE9IlByb3RvY29sbG8gZml0dGl6aW8iIERhdGFFdmVudG89IjIwMTYtMTAtMTMiIEltcG9ydG9NZW5zaWxlPSIyMDAuMCIgSW1wb3J0b1F1b3RhU1NOPSIwLjAiIFBlcmlvZG9Fcm9nYXppb25lPSIxIiBJbXBvcnRvU29nbGlhSVNFRT0iMC4wIiBQcmVzYUNhcmljbz0iMSIgRGF0YUZpbmVQcmVzdGF6aW9uZT0iMjAxNi0wOC0xMyIgSW1wb3J0b1F1b3RhRW50ZT0iMC4wIiBQcmVzZW56YVByb3ZhTWV6emk9IjIiIE9yZVNlcnZpemlvTWVuc2lsZT0iMiI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgPFNJTkEgTmVjZXNzaXRhQ3VyZVNhbml0YXJpZT0iMSIgRm9udGVEZXJpdmF6aW9uZUludmFsaWRpdGE9IjEiIEFyZWFSZWRkaXR1YWxlPSIxIiBTdHJ1bWVudG9WYWx1dGF6aW9uZT0iMSIgRm9udGVEZXJpdmF6aW9uZVZhbHV0YXppb25lPSIxIiBBcmVhU3VwcG9ydG89IjEiIE1vYmlsaXRhPSIxIiBEaXN0dXJiaUNvbXBvcnRhbWVudGFsaT0iMSIgQXR0aXZpdGFWaXRhUXVvdGlkaWFuYT0iMSI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8TmVjZXNzaXRhSW50ZXJ2ZW50aVNvY2lhbGk+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMTwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMjwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L05lY2Vzc2l0YUludGVydmVudGlTb2NpYWxpPiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludmFsaWRpdGFDaXZpbGU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnZDaXY+MTwvSW52Q2l2PiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW52Q2l2PjI8L0ludkNpdj4gIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW52YWxpZGl0YUNpdmlsZT4gIAogICAgICAgICAgICAgICAgICAgICAgICA8L1NJTkE+ICAKICAgICAgICAgICAgICAgIDwvUHJlc3RhemlvbmlTb2NpYWxpPiAgCiAgICAgICAgPC9CZW5lZmljaWFyaW8+ICAKPC9GbHVzc28+
+                      flusso: >-
+                       PEZsdXNzbyB4bWxucz0iaHR0cDovL2lucHMuaXQvQ2FzZWxsYXJpbyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSI+ICAKICAgICAgICA8SWRlbnRpZmljYXppb25lRmx1c3NvIE5vbWU9Ikg1MDEuUFMuSU5QUy4yMDE2MDQyMy4xMTUyMzUiPiAgCiAgICAgICAgICAgICAgICA8RW50ZSBEZW5vbWluYXppb25lPSJDb211bmUgZGkgUm9tYSIgQ29kaWNlPSJINTAxIiBDRk9wZXJhdG9yZT0iWFhYWFhYODBQMjBCNTAxQiIgSW5kaXJpenpvPSJINTAxIi8+ICAKICAgICAgICA8L0lkZW50aWZpY2F6aW9uZUZsdXNzbz4gIAogICAgICAgIDxCZW5lZmljaWFyaW8gQ29kaWNlRmlzY2FsZT0iUlNTTVJLNjZDMTRINTAxVSI+ICAKICAgICAgICAgICAgICAgIDxBbmFncmFmaWNhIEFubm9OYXNjaXRhPSIxOTY2IiBHZW5lcmU9IjEiIENvZGljZUNpdHRhZGluYW56YT0iMzgwIiBOb21lPSJNSVJLTyIgQ29kaWNlU2Vjb25kYUNpdHRhZGluYW56YT0iMzgwIiBMdW9nb05hc2NpdGE9Ikg1MDEiIENvZ25vbWU9IlJPU1NJIi8+ICAKICAgICAgICAgICAgICAgIDxJbmRpcml6em8gQ29kaWNlQ29tdW5lPSIwNjgwMDEiIENvZGljZU5hemlvbmU9IjM4MCIgQ29kaWNlUmVnaW9uZT0iMDEiLz4gIAogICAgICAgICAgICAgICAgPFByZXN0YXppb25pU29jaWFsaSBDYXJhdHRlcmVQcmVzdGF6aW9uZT0iMSIgQXJlYVV0ZW56YT0iMiIgSW1wb3J0b1F1b3RhVXRlbnRlPSIwLjAiIEltcG9ydG9RdW90YVJpY2hpZXN0YT0iMC4wIiBUaXBvT3BlcmF6aW9uZT0iSSIgRGF0YUluaXppb1ByZXN0YXppb25lPSIyMDE1LTA4LTEzIiBDb2RpY2VQcmVzdGF6aW9uZT0iQTIuMTYiIERlbm9taW5hemlvbmVQcmVzdGF6aW9uZT0iSW50ZXJ2ZW50aSBkaSBzdXBwb3J0byBwZXIgcmVwZXJpbWVudG8gYWxsb2dnaSIgUHJvdG9jb2xsb0RvbWFuZGE9IlByb3RvY29sbG8gZml0dGl6aW8iIERhdGFFdmVudG89IjIwMTYtMTAtMTMiIEltcG9ydG9NZW5zaWxlPSIyMDAuMCIgSW1wb3J0b1F1b3RhU1NOPSIwLjAiIFBlcmlvZG9Fcm9nYXppb25lPSIxIiBJbXBvcnRvU29nbGlhSVNFRT0iMC4wIiBQcmVzYUNhcmljbz0iMSIgRGF0YUZpbmVQcmVzdGF6aW9uZT0iMjAxNi0wOC0xMyIgSW1wb3J0b1F1b3RhRW50ZT0iMC4wIiBQcmVzZW56YVByb3ZhTWV6emk9IjIiIE9yZVNlcnZpemlvTWVuc2lsZT0iMiI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgPFNJTkEgTmVjZXNzaXRhQ3VyZVNhbml0YXJpZT0iMSIgRm9udGVEZXJpdmF6aW9uZUludmFsaWRpdGE9IjEiIEFyZWFSZWRkaXR1YWxlPSIxIiBTdHJ1bWVudG9WYWx1dGF6aW9uZT0iMSIgRm9udGVEZXJpdmF6aW9uZVZhbHV0YXppb25lPSIxIiBBcmVhU3VwcG9ydG89IjEiIE1vYmlsaXRhPSIxIiBEaXN0dXJiaUNvbXBvcnRhbWVudGFsaT0iMSIgQXR0aXZpdGFWaXRhUXVvdGlkaWFuYT0iMSI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8TmVjZXNzaXRhSW50ZXJ2ZW50aVNvY2lhbGk+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMTwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMjwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L05lY2Vzc2l0YUludGVydmVudGlTb2NpYWxpPiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludmFsaWRpdGFDaXZpbGU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnZDaXY+MTwvSW52Q2l2PiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW52Q2l2PjI8L0ludkNpdj4gIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW52YWxpZGl0YUNpdmlsZT4gIAogICAgICAgICAgICAgICAgICAgICAgICA8L1NJTkE+ICAKICAgICAgICAgICAgICAgIDwvUHJlc3RhemlvbmlTb2NpYWxpPiAgCiAgICAgICAgPC9CZW5lZmljaWFyaW8+ICAKPC9GbHVzc28+
                 RispostaVuota:
                   value:
-                    entries: []
+                    elenco_flussi: []
         '400':
           $ref: '#/components/responses/400BadRequest'
         '404':
@@ -136,17 +131,6 @@ components:
       maximum: 1e+20
       xml:
         name: UnixTimestamp
-    TaxCode:
-      type: string
-      description: 'Il codice fiscale di una persona fisica'
-      minLength: 16
-      maxLength: 16
-      example: PRTVNI65R70D420E
-    AltCode:
-      type: string
-      description: 'Codice in versione anonimizzata per l''identificazione del beneficiario'
-      minLength: 0
-      maxLength: 20
     Flusso:
       type: object
       additionalProperties: false
@@ -164,17 +148,7 @@ components:
           description: Denominazione dell'ente che ha generato il flusso.
           maxLength: 256
           example: "Comune di Roma"
-        indirizzo_ente:
-          type: string
-          example: via Parini 51 - Roma
-          description: Indirizzo dell'ente.
-          maxLength: 128
-        id_operatore:
-          description: >-
-            Identificativo dell’operatore che ha richiesto la prestazione per conto dell’interessato.
-          anyOf:
-          - $ref: '#/components/schemas/TaxCode'
-        id:
+        id_flusso:
           description: >-
             Protocollo di identificazione del flusso. L'identificativo ha la seguente struttura: 'EEEEE.FMT.INPS.AAAAMMGG.NNNNNNN', dove:
             - EEEEE è il codice dell'ente erogatore
@@ -187,20 +161,14 @@ components:
           maxLength: 64
         tipo:
           $ref: '#/components/schemas/TipoFlusso'
-        id_beneficiario:
-          description: >-
-            Identificativo dell’interessato e cioè il beneficiario della prestazione.
-            Può trattarsi di un codice fiscale o di un’altra tipologia di identificativo.
-          anyOf:
-          - $ref: '#/components/schemas/TaxCode'
-          - $ref: '#/components/schemas/AltCode'
-        ts:
-          $ref: '#/components/schemas/UnixTimestamp'
-        contenuto:
+        ts_flusso:
+          type: string
+          format: date-time
+        flusso:
           type: string
           format: byte
           description: |-
-            Una stringa XML codificata in base64 il cui valore rappresenta l’oggetto XML relativo al flusso. La produzione di tale oggetto XML e la sua acquisizione ed elaborazione resta a carico degli applicativi agli estremi della comunicazione. Gli XSD di riferimento per la creazione di un flusso sono:
+            Contiene il flusso in formato xml, codificato in base64. Gli XSD di riferimento per la creazione di un flusso sono:
               - [PS_PSA2016_SINA.xsd](https://www.inps.it/docallegatiNP/Mig/Dati_analisi_bilanci/casellario_assistenza/PS_PSA_SINA201812.xsd)
               - [SINBA.xsd](https://www.inps.it/docallegatiNP/Mig/Dati_analisi_bilanci/casellario_assistenza/SINBA.xsd)
           maxLength: 10000000  # 10MB
@@ -209,7 +177,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        entries:
+        elenco_flussi:
           type: array
           minItems: 0
           maxItems: 100
