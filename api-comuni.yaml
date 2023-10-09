@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Welfare as a Service - API WAAS-SIUSS-Alimentazione
-  version: 1.0.0
+  version: 1.0.3
   termsOfService: "url-terms-of-service"
   x-summary: API di Interscambio dati Welfare per i Welfare Provider
   contact:
@@ -75,7 +75,7 @@ paths:
                     - codice_ente: H501
                       denominazione_ente: Comune di Roma
                       id_flusso: H501.PS.INPS.20160423.115235
-                      ts_flusso: '1970-01-19 13:26:40.000Z'
+                      ts_flusso: 1600000000
                       tipo: PS_PSA_SINA
                       flusso: >-
                        PEZsdXNzbyB4bWxucz0iaHR0cDovL2lucHMuaXQvQ2FzZWxsYXJpbyIgeG1sbnM6eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSI+ICAKICAgICAgICA8SWRlbnRpZmljYXppb25lRmx1c3NvIE5vbWU9Ikg1MDEuUFMuSU5QUy4yMDE2MDQyMy4xMTUyMzUiPiAgCiAgICAgICAgICAgICAgICA8RW50ZSBEZW5vbWluYXppb25lPSJDb211bmUgZGkgUm9tYSIgQ29kaWNlPSJINTAxIiBDRk9wZXJhdG9yZT0iWFhYWFhYODBQMjBCNTAxQiIgSW5kaXJpenpvPSJINTAxIi8+ICAKICAgICAgICA8L0lkZW50aWZpY2F6aW9uZUZsdXNzbz4gIAogICAgICAgIDxCZW5lZmljaWFyaW8gQ29kaWNlRmlzY2FsZT0iUlNTTVJLNjZDMTRINTAxVSI+ICAKICAgICAgICAgICAgICAgIDxBbmFncmFmaWNhIEFubm9OYXNjaXRhPSIxOTY2IiBHZW5lcmU9IjEiIENvZGljZUNpdHRhZGluYW56YT0iMzgwIiBOb21lPSJNSVJLTyIgQ29kaWNlU2Vjb25kYUNpdHRhZGluYW56YT0iMzgwIiBMdW9nb05hc2NpdGE9Ikg1MDEiIENvZ25vbWU9IlJPU1NJIi8+ICAKICAgICAgICAgICAgICAgIDxJbmRpcml6em8gQ29kaWNlQ29tdW5lPSIwNjgwMDEiIENvZGljZU5hemlvbmU9IjM4MCIgQ29kaWNlUmVnaW9uZT0iMDEiLz4gIAogICAgICAgICAgICAgICAgPFByZXN0YXppb25pU29jaWFsaSBDYXJhdHRlcmVQcmVzdGF6aW9uZT0iMSIgQXJlYVV0ZW56YT0iMiIgSW1wb3J0b1F1b3RhVXRlbnRlPSIwLjAiIEltcG9ydG9RdW90YVJpY2hpZXN0YT0iMC4wIiBUaXBvT3BlcmF6aW9uZT0iSSIgRGF0YUluaXppb1ByZXN0YXppb25lPSIyMDE1LTA4LTEzIiBDb2RpY2VQcmVzdGF6aW9uZT0iQTIuMTYiIERlbm9taW5hemlvbmVQcmVzdGF6aW9uZT0iSW50ZXJ2ZW50aSBkaSBzdXBwb3J0byBwZXIgcmVwZXJpbWVudG8gYWxsb2dnaSIgUHJvdG9jb2xsb0RvbWFuZGE9IlByb3RvY29sbG8gZml0dGl6aW8iIERhdGFFdmVudG89IjIwMTYtMTAtMTMiIEltcG9ydG9NZW5zaWxlPSIyMDAuMCIgSW1wb3J0b1F1b3RhU1NOPSIwLjAiIFBlcmlvZG9Fcm9nYXppb25lPSIxIiBJbXBvcnRvU29nbGlhSVNFRT0iMC4wIiBQcmVzYUNhcmljbz0iMSIgRGF0YUZpbmVQcmVzdGF6aW9uZT0iMjAxNi0wOC0xMyIgSW1wb3J0b1F1b3RhRW50ZT0iMC4wIiBQcmVzZW56YVByb3ZhTWV6emk9IjIiIE9yZVNlcnZpemlvTWVuc2lsZT0iMiI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgPFNJTkEgTmVjZXNzaXRhQ3VyZVNhbml0YXJpZT0iMSIgRm9udGVEZXJpdmF6aW9uZUludmFsaWRpdGE9IjEiIEFyZWFSZWRkaXR1YWxlPSIxIiBTdHJ1bWVudG9WYWx1dGF6aW9uZT0iMSIgRm9udGVEZXJpdmF6aW9uZVZhbHV0YXppb25lPSIxIiBBcmVhU3VwcG9ydG89IjEiIE1vYmlsaXRhPSIxIiBEaXN0dXJiaUNvbXBvcnRhbWVudGFsaT0iMSIgQXR0aXZpdGFWaXRhUXVvdGlkaWFuYT0iMSI+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8TmVjZXNzaXRhSW50ZXJ2ZW50aVNvY2lhbGk+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMTwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxDb2RpY2VQcmVzdGF6aW9uZT5BMS4wMjwvQ29kaWNlUHJlc3RhemlvbmU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L05lY2Vzc2l0YUludGVydmVudGlTb2NpYWxpPiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPEludmFsaWRpdGFDaXZpbGU+ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxJbnZDaXY+MTwvSW52Q2l2PiAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8SW52Q2l2PjI8L0ludkNpdj4gIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvSW52YWxpZGl0YUNpdmlsZT4gIAogICAgICAgICAgICAgICAgICAgICAgICA8L1NJTkE+ICAKICAgICAgICAgICAgICAgIDwvUHJlc3RhemlvbmlTb2NpYWxpPiAgCiAgICAgICAgPC9CZW5lZmljaWFyaW8+ICAKPC9GbHVzc28+
@@ -150,14 +150,14 @@ components:
           example: "Comune di Roma"
         id_flusso:
           description: >-
-            Protocollo di identificazione del flusso. L'identificativo ha la seguente struttura: 'EEEEE.FMT.INPS.AAAAMMGG.NNNNNNN', dove:
-            - EEEEE è il codice dell'ente erogatore
-            - TIPO il formato utilizzato (es. SINBA o PS)
+            Protocollo di identificazione del flusso. L'identificativo ha la seguente struttura: 'EEEEE.TIPO.AAAAMMGG.NNNNNNN', dove:
+            - EEEEE è il codice dell'ente erogatore secondo la codifica prevista dal sistema di accesso dell’INPS
+            - TIPO il formato utilizzato (SINBA o PS)
             - AAAAMMGG è la data di creazione del flusso
             - NNNNNNN è un progressivo giornaliero
           type: string
-          example: "H501.PS.INPS.20160423.115235"
-          pattern: '^[A-Z][0-9]{3}\.[A-Z]{2}\.[A-Z]{4}\.[0-9]{8}\.[0-9]{6}$'
+          example: "H501.PS.20160423.0000001"
+          pattern: '^[A-Z0-9]{1,5}\.(?:SINBA|PS)\.[0-9]{8}\.[0-9]{7}$'
           maxLength: 64
         tipo:
           $ref: '#/components/schemas/TipoFlusso'
