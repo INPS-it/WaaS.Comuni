@@ -12,6 +12,7 @@ Per abilitare il servizio di alimentazione, l'Ente aderente deve:
 4. Inviare una richiesta di adesione a progettowelfareasaservice@inps.it indicando: 
    * Il nome dell'Ente; 
    * Il codice belfiore dell'Ente;
+   * IP o range di IP di erogazione del servizio in ambiente di collaudo e produzione;
 5. Accettare la conseguente richiesta di fruizione del servizio da parte di INPS tramite portale PDND di Collaudo;
 6. Dare seguito alle eventuali segnalazioni inviate da INPS ai contatti dell'Ente derivanti dalle verifiche di corretta implementazione del servizio di alimentazione;
 7. Accettare la richiesta di fruizione del servizio da parte di INPS tramite portale PDND di Produzione; 
