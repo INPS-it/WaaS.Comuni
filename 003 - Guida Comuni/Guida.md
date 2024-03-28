@@ -3,6 +3,8 @@ WaaS - Welfare as a Service
 # Guida all'erogazione di e-service per WaaS
 V1.1 - Marzo 2024
 
+Il progetto “Welfare as a Service” (WaaS) ha l’obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è il Sistema Informativo Unico dei Servizi Sociali (SIUSS), una banca dati integrata di tutte le informazioni relative alle prestazioni sociali presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API di interscambio esposta da tutti i soggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
+
 # INDICE DEI CONTENUTI
 
 -   [INTRODUZIONE](#introduzione)
