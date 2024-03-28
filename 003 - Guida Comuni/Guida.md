@@ -101,9 +101,7 @@ possiedono il ruolo di amministrazione della piattaforma.*
 2.  inserisci una mail di contatto diretto dell'utente che gestisce la
     piattaforma per conto del comune.
 
-     ![Immagine che contiene testo, software, schermata, Icona del computer
-   Descrizione generata
-     automaticamente](./media/image2.png)
+     ![](./media/image2.png)
 
      NB: L'indirizzo potrà essere utilizzato da INPS e da altri enti per
      comunicazioni di carattere tecnico: si suggerisce di inserire un
@@ -134,9 +132,7 @@ collaudo che in ambiente di produzione.
     un nuovo e-service.
     ![](./media/image3.png)
 2.  Allo step **Generale** inserisci nome e descrizione come da esempio,
-    poi continua con **Salva bozza e prosegui**![Immagine che contiene
-    testo, schermata, software, Pagina Web Descrizione generata
-    automaticamente](./media/image4.png)
+    poi continua con **Salva bozza e prosegui**![](./media/image4.png)
 
     **Nome dell'e-service**: WAAS-SIUSS-Alimentazione
 
@@ -199,18 +195,14 @@ collaudo che in ambiente di produzione.
 10. **Conferma** la pubblicazione dell'e-service: è completato il
     processo di pubblicazione in piattaforma ![](./media/image12.png)
 
-5.  **Invio riferimenti IP ad INPS**
-
-Completato con successo il processo di pubblicazione dell'e-service in
-piattaforma, INPS richiede di inviare una mail alla casella di posta
-dedicata al progetto ***progettowelfareasaservice@inps.it*** indicando:
-
--   il nome dell'Ente;
-
--   il codice belfiore dell'Ente;
-
--   IP o range di IP di erogazione del servizio in ambiente di collaudo
-    e produzione;
+11.  **Invio riferimenti IP ad INPS**
+    Completato con successo il processo di pubblicazione dell'e-service in
+    piattaforma, INPS richiede di inviare una mail alla casella di posta
+    dedicata al progetto ***progettowelfareasaservice@inps.it*** indicando:
+    -   il nome dell'Ente;
+    -   il codice belfiore dell'Ente;
+    -   IP o range di IP di erogazione del servizio in ambiente di collaudo
+        e produzione;
 
 ## LINK UTILI
 
