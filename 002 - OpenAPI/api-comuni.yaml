@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Welfare as a Service - API WAAS-SIUSS-Alimentazione
-  version: 1.0.4
+  version: 2.0.0
   termsOfService: "url-terms-of-service"
   x-summary: API di Interscambio dati Welfare per i Welfare Provider
   contact:
@@ -10,7 +10,7 @@ info:
   description: |-
     # API di Interscambio dati Welfare per i Welfare Provider 
 
-    Il progetto “Welfare As a Service” ha obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è pertanto una banca dati integrata di tutte le informazioni presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API dio interscambio esposta da tutti i ssoggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
+    Il progetto “Welfare As a Service” ha obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è pertanto una banca dati integrata di tutte le informazioni presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API di interscambio esposta da tutti i ssoggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
 
     La API di interscambio è basata su un’interfaccia standard Openapi 3 conforme alle linee guida AGID per l’interoperabilità (MODI).
 
@@ -26,8 +26,9 @@ info:
     - https://www.inps.it/dati-ricerche-e-bilanci/siuss-ex-casellario-dellassistenza/specifiche-tecniche
 tags:
 - name: Flussi
+- name: Esiti
 servers:
-- url: https://api.comune.it/waas/v1
+- url: https://api.example.com/waas/v1
   description: server della generica PAL
 paths:
   /flussi:
@@ -95,9 +96,48 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '500':
           $ref: '#/components/responses/default'
+  /esiti:
+    post:
+      summary: "Notifica degli esiti delle elaborazioni"
+      description: |- 
+        Periodicamente INPS invoca la risorsa '/esiti' per notificare il risultato dell'elaborazione dei flussi ricevuti dall'Ente, inserendo nel payload un elenco di esiti.
+        Ciascuna richiesta di notifica sarà considerata consegnata se l’Ente risponde con un codice HTTP 2xx ed esclusa dalle successive iterazioni del processo di notifica.
+        Nel caso l’ente risponda con un codice HTTP diverso da 2xx, la notifica verrà ritentata nelle successive iterazioni. 
+        E’ onere dell’Ente individuare il codice di risposta opportuno per guidare il processo di rispedizione in base alle proprie logiche interne.
+      operationId: NotificaEsiti
+      tags:
+        - Esiti
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElencoEsiti'
+            example:
+              elenco_esiti:
+                - id_flusso: H501.PS.20210520.0000002
+                  ts_flusso: "2023-11-27T11:04:56.852Z"
+                  ts_acquisizione: "2023-11-27T11:04:56.852Z"
+                  tipo: PS_PSA_SINA
+                  codice_esito: 'OK'
+                  id_acquisizione_siuss: "22738"
+                - id_flusso: H501.PS.20210520.00000004
+                  ts_flusso: "2023-11-27T11:04:56.852Z"
+                  ts_acquisizione: "2023-11-27T11:04:56.852Z"
+                  tipo: SINBA
+                  codice_esito: 'RICHIESTA_INVALIDA'
+                  descrizione_esito: "In cooperazione è possibile inviare solo un beneficiario e una prestazione sociale"
+      responses:
+        '204':
+          description: "Notifica recepita con successo"
+        default:
+          description: "Notifica non recepita"
+          content:
+            application/problem+json:
+              schema:
+                  $ref: '#/components/schemas/Problem'
   /status:
     get:
-      security: [{}]  # NOTA: le chiamate verso /status non richiedono autenticazione in modo da poter essere usate per monitorare lo stato dell'applicazione.
       summary: "Ritorna lo stato dell'applicazione"
       operationId: healthCheck
       tags:
@@ -128,12 +168,12 @@ components:
   schemas:
     UnixTimestamp:
       description: >-
-        Timestamp relativo alla data di ultima modifica del flusso. Tale dato viene utilizzato per il
+        Timestamp in millisecondi relativo alla data di ultima modifica del flusso. Tale dato viene utilizzato per il
         confronto con il parametro `since` al fine di determinare la successione cronologica degli
         aggiornamenti.
       type: integer
       format: int64
-      example: 1490000000
+      example: 1490000000000
       minimum: 0
       maximum: 1e+20
       xml:
@@ -164,7 +204,6 @@ components:
             - NNNNNNN è un progressivo giornaliero
           type: string
           example: "H501.PS.20160423.0000001"
-          pattern: '^[A-Z0-9]{1,5}\.(?:SINBA|PS)\.[0-9]{8}\.[0-9]{7}$'
           maxLength: 64
         tipo:
           $ref: '#/components/schemas/TipoFlusso'
@@ -190,6 +229,48 @@ components:
           maxItems: 100
           items:
             $ref: '#/components/schemas/Flusso'
+    ElencoEsiti:
+      type: object
+      additionalProperties: false
+      properties:
+        elenco_esiti:
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/EsitoFlusso'
+    EsitoFlusso:
+      type: object
+      required:
+        - id_flusso
+        - tipo
+        - ts_flusso
+        - ts_acquisizione
+        - codice_esito
+      properties:
+        id_flusso:
+          type: string
+          description: "ID del flusso"
+        tipo:
+          type: string
+          description: "Tipo di flusso (PS_PSA_SINA o SINBA)"
+        ts_flusso:
+          type: string
+          format: date-time          
+        ts_acquisizione:
+          type: string
+          format: date-time
+          description: "Data di esecuzione dell'operazione di acquisizione flussi"
+        codice_esito:
+          type: string
+          enum: ["OK","DATI_NON_TROVATI","RICHIESTA_INVALIDA","ERRORE_GENERICO"]
+          description: "Esito dell'operazione di pubblicazione sul SIUSS"
+        descrizione_esito:
+          type: string
+          description: "Dettaglio dell'esito"    
+        id_acquisizione_siuss:
+          type: string
+          description: "Codice di acquisizione del flusso assegnato dal SIUSS. Valorizzato solo in caso di esito `OK`"
     TipoFlusso:
       type: string
       description: Tipologia di ﬂusso. I valori ammessi sono “PS\_PSA\_SINA” o “SINBA”.
@@ -318,3 +399,4 @@ components:
         format: "int32"
         minimum: 0
         maximum: 3600
+
