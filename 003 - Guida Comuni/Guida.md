@@ -199,10 +199,10 @@ collaudo che in ambiente di produzione.
     Completato con successo il processo di pubblicazione dell'e-service in
     piattaforma, INPS richiede di inviare una mail alla casella di posta
     dedicata al progetto ***progettowelfareasaservice@inps.it*** indicando:
-    -   il nome dell'Ente;
-    -   il codice belfiore dell'Ente;
-    -   IP o range di IP di erogazione del servizio in ambiente di collaudo
-        e produzione;
+
+  *  il nome dell'Ente;
+  * il codice belfiore dell'Ente;
+  * IP o range di IP di erogazione del servizio in ambiente di collaudo e produzione;
 
 ## LINK UTILI
 
