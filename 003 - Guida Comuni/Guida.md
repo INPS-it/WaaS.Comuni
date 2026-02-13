@@ -7,7 +7,7 @@ Questo documento contiene le indicazioni operative per l’esposizione delle API
 
 Il servizio di Alimentazione SIUSS consente ai Comuni di trasmettere a INPS i flussi informativi necessari all’alimentazione del sistema SIUSS, secondo le specifiche tecniche e di interoperabilità definite.
 
-A partire dal 2025, INPS ha introdotto un **template eService PDND** per standardizzare la pubblicazione del servizio di Alimentazione SIUSS da parte degli Enti aderenti.
+A partire dal 2026, INPS ha introdotto un **template eService PDND** per standardizzare la pubblicazione del servizio di Alimentazione SIUSS da parte degli Enti aderenti.
 
 Il template di riferimento è denominato: **Consultazione Flussi SIUSS – WaaS**.
 
