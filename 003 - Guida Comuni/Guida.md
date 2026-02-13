@@ -1,210 +1,125 @@
-WaaS - Welfare as a Service
+# Guida per i Comuni  
+## Welfare as a Service (WaaS) - Servizio di Alimentazione SIUSS 
 
-# Guida all'erogazione di e-service per WaaS
-V1.1 - Marzo 2024
+Questo documento contiene le indicazioni operative per l’esposizione delle API WaaS di popolamento del **SIUSS – Sistema Informativo Unitario dei Servizi Sociali** da parte degli Enti partecipanti al progetto **Welfare as a Service (WaaS)**.
 
-Il progetto “Welfare as a Service” (WaaS) ha l’obiettivo di realizzare la condivisione e l’interoperabilità delle banche dati a livello centrale e locale tra INPS, gli Enti locali e le altre amministrazioni centrali della comunità digitale del welfare. Componente centrale del progetto è il Sistema Informativo Unico dei Servizi Sociali (SIUSS), una banca dati integrata di tutte le informazioni relative alle prestazioni sociali presenti sul territorio. La banca dati viene tenuta regolarmente aggiornata da INPS, utilizzando una API di interscambio esposta da tutti i soggetti interessati tramite la Piattaforma Nazionale Digitale dei Dati (PDND).
+## 1. Contesto
 
-# INDICE DEI CONTENUTI
+Il servizio di Alimentazione SIUSS consente ai Comuni di trasmettere a INPS i flussi informativi necessari all’alimentazione del sistema SIUSS, secondo le specifiche tecniche e di interoperabilità definite.
 
--   [INTRODUZIONE](#introduzione)
+A partire dal 2025, INPS ha introdotto un **template eService PDND** per standardizzare la pubblicazione del servizio di Alimentazione SIUSS da parte degli Enti aderenti.
 
--   [REPOSITORY GITHUB](#repository-github)
+Il template di riferimento è denominato: **Consultazione Flussi SIUSS – WaaS**.
 
--   [GUIDA ALLA PUBBLICAZIONE SU
-    PDND](#guida-alla-pubblicazione-su-pdnd)
+Il template è attualmente disponibile in **ambiente di collaudo** e in **ambiente di produzione** e rappresenta il modello di riferimento per le **nuove adesioni**, a partire dalla sua pubblicazione.
 
--   [LINK UTILI](#link-utili)
+## 2. Modalità di adesione
 
-# INTRODUZIONE
+Sono previste due modalità:
 
-Il
-[SIUSS](https://www.inps.it/it/it/dati-e-bilanci/siuss--ex-casellario-dell-assistenza.html)
-(Sistema Informativo Unico dei Servizi Sociali) deve essere alimentato
-da ciascun ente con le proprie informazioni ai sensi del Decreto
-206/2014. L'alimentazione può avvenire sia contattando un e-service
-pubblicato da INPS, sia pubblicando un e-service che verrà contattato
-periodicamente da INPS.
+- **Nuove adesioni**  
+  Possono avvenire tramite il template eService PDND predisposto da INPS.
 
-Il seguente documento supporta i Comuni nella pubblicazione
-dell'e-service per il popolamento del SIUSS sulla Piattaforma digitale
-Nazionale Dati (PDND), guidando passo a passo nella preparazione ed
-erogazione. L'e-service pubblicato può essere parte degli adempimenti
-necessari per l'asseverazione dei progetti finanziati con gli avvisi
-legati alla Misura 1.3.1 del PNRR per i Comuni
+- **Enti già aderenti**  
+  Gli Enti che hanno già pubblicato autonomamente l’eService prima dell’introduzione del template possono continuare a utilizzare le erogazioni già attive. Il passaggio al template potrà essere richiesto in occasione di eventuali aggiornamenti del servizio che introducano modifiche non retrocompatibili.
 
-Per maggiori informazioni sull'adesione e l'utilizzo della Piattaforma,
-riportiamo tra i [link utili](#link-utili) a fine documento il
-collegamento al manuale di [PDND
-Interoperabilità](https://docs.pagopa.it/interoperabilita-1).
+## 3. Implementazione dell’API di alimentazione
 
-# REPOSITORY GITHUB
+Il Comune deve implementare l’API di alimentazione in accordo alle specifiche OpenAPI disponibili nel repository:
 
-Il repository Github **WaaS.Comuni** pubblicato da INPS
-(<https://github.com/INPS-it/WaaS.Comuni>) contiene le specifiche
-tecniche per le API di popolamento del SIUSS da parte dei Comuni.
+- https://github.com/INPS-it/WaaS.Comuni/blob/main/002%20-%20OpenAPI/api-comuni.yaml
 
-Invitiamo in particolare a visionare:
+## 4. Adesione alla piattaforma PDND
 
--   il **README** introduttivo
+Se non già effettuata, l’adesione alla piattaforma PDND deve essere completata secondo la guida ufficiale PagoPA:
 
--   la cartella **OpenAPI** contenente la specifica, in formato openapi
-    3.0.3 del servizio da implementare.
+- https://docs.pagopa.it/interoperabilita-1/manuale-operativo/guida-alladesione
 
--   la cartella **Specifiche Tecniche** contenente i documenti con le
-    specificha tecnica del servizio e la logica con cui INPS utilizzerà
-    la API per l'alimentazione della banca dati del progetto.
+È necessario verificare che gli indirizzi e-mail istituzionali dell’Ente siano correttamente configurati,
+poiché verranno utilizzati per tutte le comunicazioni formali.
 
-## GUIDA ALLA PUBBLICAZIONE SU PDND
+## 5. Pubblicazione e configurazione dell’eService tramite Template
 
-### 1. Selezione dell'ambiente
+### Accesso al template
 
-PDND Interoperabilità mette a disposizione dei suoi aderenti due
-ambienti, collaudo e produzione. L'ambiente di collaudo, denomitato
-"*Interoperabilità collaudo*", è stato creato con lo scopo di effettuare
-dei test sull'integrazione tra aderenti, oppure per verificare la
-propria integrazione con PDND. L'ambiente di produzione, denominato
-"*Interoperabilità*", è l'ambiente dove vengono erogate le API
-effettivamente utilizzate dagli altri aderenti della piattaforma. In
-PDND non c'è bisogno, da parte dell'aderente, di fare alcuna
-operazione aggiuntiva a valle dell'adesione, i due ambienti saranno
-attivati automaticamente.
+1. Accedere al **Portale PDND**.
+2. Individuare il template **“Consultazione Flussi SIUSS – WaaS”** nella sezione **Erogazione → Template e-service** e accedere al relativo dettaglio.
 
-Per selezionare l'ambiente dove si intende operare seguire i seguenti
-passi:
+![Figura 1 – Dettaglio del template eService](./media/fig01_template_dettaglio.png)
 
-1.  Effettuare il login con le credenziali SPID o CIE
-2.  Selezionare l'ente per il quale sto operando
-3.  Selezionare il prodotto "*Interoperabilità*"
-4.  Successivamente alla selezione del prodotto, comparirà una schermata
-    dove viene chiesto se si intende operare sull'ambiente di collaudo
-    o produzione
-5.  Selezionare l'ambiente desiderato
+3. Derivare una nuova istanza del servizio cliccando su **“Usa template”**.
 
-Gli ambienti di collaudo vanno sempre mantenuti attivi, per permettere
-sia all'ente, che ai fruitori, di effettuare test sull'API, prima di
-operare su quella di produzione.
+![Figura 2 – Creazione eService da template](./media/fig02_usa_template.png)
 
-*NB: Tutti i passaggi mostrati nella guida devono essere ripetuti sia in
-ambiente di collaudo che in ambiente di produzione.*
+### Step 1 – Signal Hub e Deleghe
 
-### 2. Inserimento contatti
+Nel contesto dello step 1 mantenere **non attive** le opzioni relative a:
 
-*NB: La modifica dei contatti è possibile per i soli utenti che
-possiedono il ruolo di amministrazione della piattaforma.*
+- Signal Hub
+- Deleghe
 
-1.  Una volta scelto l'ambiente in cui intendi operare, dal menu di
-    sinistra seleziona **il tuo ente** \> **anagrafica e attributi.**
-    Successivamente clicca su **modifica** nella sezione
-    contatti![](./media/image1.png "2.1")
+![Figura 3 – Signal Hub e Deleghe](./media/fig03_signalhub_deleghe.png)
 
-2.  inserisci una mail di contatto diretto dell'utente che gestisce la
-    piattaforma per conto del comune.
+### Step 2 – Configurazioni di sicurezza e carico
 
-     ![](./media/image2.png)
+#### Impostazione dell’audience PDND
+Impostare il valore dell’audience per la validazione dei token.
 
-     NB: L'indirizzo potrà essere utilizzato da INPS e da altri enti per
-     comunicazioni di carattere tecnico: si suggerisce di inserire un
-     contatto diretto dell'utente amministratore della piattaforma,
-     evitando di inserire PEC o indirizzi di posta poco monitorati.
+#### Soglie di carico (Rate limits)
+Il template propone valori predefiniti. L’Ente può:
 
-### 3. Preparazione del file .yaml
+- accettare i valori consigliati;
+- definire soglie personalizzate.
 
-Il file api-comuni.yaml andrà personalizzato secondo quanto scelto
-dall'ente.
+#### Accettazione delle richieste di fruizione
+Poiché la fruizione è consentita al solo ente **INPS**, si sconsiglia l’attivazione della modalità di accettazione manuale.
 
-In particolare:
+![Figura 4 – Configurazione Step 2](./media/fig04_step2_configurazione.png)
 
--   Il parametro `termsOfService` con la URL che descrive i termini
-    d'uso del servizio
--   Il parametro `contact.email` con l\'email di contatto per supporto
-    all'API
--   Il parametro `servers.url` con la URL di esposizione del servizio
-    relativa all'ambiente di pubblicazione
+### Step 3 – Attributi vincolati
 
-### 4. Erogazione e-service
+Non è possibile modificare gli attributi che prevedono il vincolo di fruizione al solo ente INPS.
 
-NB: seguenti passaggi devono essere ripetuti sia in ambiente di
-collaudo che in ambiente di produzione.
+![Figura 5 – Step 3 – Attributi](./media/fig05_step3_attributi.png)
 
-1. Seleziona **Erogazione** \> **I tuoi e-service** e clicca il
-    pulsante **"+1 Crea Nuovo"** per avviare il processo di creazione di
-    un nuovo e-service.
-    ![](./media/image3.png)
-2.  Allo step **Generale** inserisci nome e descrizione come da esempio,
-    poi continua con **Salva bozza e prosegui**![](./media/image4.png)
+### Step 4 – Completamento del descrittore API
 
-    **Nome dell'e-service**: WAAS-SIUSS-Alimentazione
+L’Ente deve completare:
 
-    **Descrizione**: Il servizio consente la trasmissione
-    telematica dei dati al SIUSS Sistema Informativo Unitario dei Servizi
-    Sociali, tramite la fruizione da parte di INPS attraverso Web API,
-    tipologia REST.
-3.  Allo step **Versione** inserisci i dati dei campi obbligatori,
-    lasciando come di default (non selezionata) l'attivazione manuale.
-    Poi continua con **Salva bozza e prosegui**
+- dati di contatto tecnici;
+- URL dei Termini del Servizio;
+- URL dei server che espongono l’API.
 
-    ![](./media/image5.png)
+![Figura 6 – Step 4 – Dati di contatto e server](./media/fig06_step4_contatti_server.png)
 
-    Suggeriamo i seguenti valori per quanto riguarda la durata del voucher
-    e le soglie relative alle chiamate:
+## 6. Invio della richiesta di adesione a INPS
 
-    **Durata validità (in minuti):** 1440
+Dopo la pubblicazione dell’eService, il Comune deve inviare una comunicazione a:
 
-    **Chiamate API/giorno per fruitore:** 100
+📧 **progettowelfareasaservice@inps.it**
 
-    **Chiamate API/giorno totali:** 100
+indicando:
 
-    **Audience:** SIUSS
+- nome dell’Ente;
+- codice Belfiore;
+- IP o range di IP di erogazione (collaudo e produzione).
 
-4.  Allo step **Attributi** vanno indicati gli attributi che il fruitore
-    deve possedere per richiedere la fruizione dell'e-service. In questo
-    caso dovrà essere inserito un attributo certificato specifico per il
-    fruitore INPS, in quanto solo l'istituto potrà usufruire del
-    servizio. Clicca su **Attributi Certificati** \> **Aggiungi
-    attributo**
+## 7. Fruizione del servizio
 
-    ![](./media/image6.png)
+### Collaudo
+INPS inoltrerà la richiesta di fruizione in collaudo ed effettuerà le verifiche tecniche.
 
-5.  Seleziona **Aggiungi requisito**, digita nel campo di ricerca
-    "INPS" e seleziona **Istituto Nazionale Previdenza Sociale -
-    INPS**![](./media/image7.png)
+### Produzione
+A seguito del buon esito del collaudo, il servizio sarà attivato in Produzione.
 
-6.  Clicca su **Aggiungi requisito** per confermare la
-    selezione![](./media/image8.png)
+## 8. Documentazione tecnica
 
-7.  Se l'attributo è stato selezionato correttamente, comparirà tra gli
-    attributi certificati, come da esempio seguente. A questo punto
-    clicca "**Salva bozza e prosegui**"
+Il repository contiene:
 
-    ![](./media/image9.png)
+- schemi `.xsd` dei flussi SIUSS;
+- OpenAPI `.yaml`.
 
-8.  L'ultimo step è dedicato alla **Documentazione** relativa
-    all'e-service: qui è necessario caricare il file .yaml con la
-    specifica API, scaricato dal repository Github di INPS e
-    opportunamente aggiornato [come da punto 3](#3-preparazione-del-file-yaml). Se
-    necessario, potrai inserire ulteriore documentazione a supporto
-
-    ![](./media/image10.png)
-
-9.  Clicca **Vai al riepilogo** e, dopo aver visualizzato il riepilogo,
-    clicca su **Pubblica**
-
-    ![](./media/image11.png)
-
-10. **Conferma** la pubblicazione dell'e-service: è completato il
-    processo di pubblicazione in piattaforma ![](./media/image12.png)
-
-11.  **Invio riferimenti IP ad INPS**
-    Completato con successo il processo di pubblicazione dell'e-service in
-    piattaforma, INPS richiede di inviare una mail alla casella di posta
-    dedicata al progetto ***progettowelfareasaservice@inps.it*** indicando:
-
-  *  il nome dell'Ente;
-  * il codice belfiore dell'Ente;
-  * IP o range di IP di erogazione del servizio in ambiente di collaudo e produzione;
-
-## LINK UTILI
+## 9. LINK UTILI
 
 -   [Manuale PDND](https://docs.pagopa.it/interoperabilita-1)
     Interoperabilità
