@@ -4,7 +4,7 @@ Questo repository contiene le specifiche tecniche, nell'ambito del progetto **We
 
 ## Procedura di adesione al servizio
 
-A partire dal 2025, l’attivazione del servizio di **Alimentazione WAAS-SIUSS** è supportata da un **template eService PDND** predisposto dall’INPS, denominato: **`Consultazione Flussi SIUSS - WaaS`**.
+A partire dal 2026, l’attivazione del servizio di **Alimentazione WAAS-SIUSS** è supportata da un **template eService PDND** predisposto dall’INPS, denominato: **`Consultazione Flussi SIUSS - WaaS`**.
 
 Il template consente agli Enti di pubblicare l’eService su PDND in modo standardizzato, riducendo la complessità di configurazione e garantendo coerenza con le specifiche del servizio.
 
